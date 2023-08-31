@@ -1,23 +1,23 @@
 #include "binary_trees.h"
+int tree_node_depth(const binary_tree_t *node);
 
 /**
- * binary_trees_ancestor - It finds the lowest common ancestor of two nodes
- * @first: Pointer to the first node to find the ancestor
- * @second: Pointer to the second node to find the ancestor
+ * binary_trees_ancestor - finds the common ancestor of two nodes
  *
- * Return: Pointer to the ancestor node
- *         NULL if there is no ancestor node
+ * @first: first node
+ * @second: second node
+ *
+ * Return: pointer to node of ancestor
  */
 binary_tree_t *binary_trees_ancestor(const binary_tree_t *first,
-				     const binary_tree_t *second)
+		const binary_tree_t *second)
 {
-	size_t depth_first, depth_second;
+	int depth_first, depth_second;
 
 	if (!first || !second)
 		return (NULL);
-
-	depth_first = binary_tree_depth(first);
-	depth_second = binary_tree_depth(second);
+	depth_first = tree_node_depth(first);
+	depth_second = tree_node_depth(second);
 
 	while (depth_first > depth_second)
 	{
@@ -29,6 +29,7 @@ binary_tree_t *binary_trees_ancestor(const binary_tree_t *first,
 		second = second->parent;
 		depth_second--;
 	}
+
 	while (first && second)
 	{
 		if (first == second)
@@ -36,28 +37,29 @@ binary_tree_t *binary_trees_ancestor(const binary_tree_t *first,
 		first = first->parent;
 		second = second->parent;
 	}
-	return ((binary_tree_t *)first);
+	return (NULL);
 }
 
 /**
- * binary_tree_depth - It measures the depth of a node in a binary tree
- * @tree: The node to calculate the depth of
+ * tree_node_depth - measure the depth of of a node
  *
- * Return: depth of the node
- *         0 if tree is NULL
+ * @node: the node to measure
+ *
+ * Return: depth
  */
-size_t binary_tree_depth(const binary_tree_t *tree)
+int tree_node_depth(const binary_tree_t *node)
 {
-	size_t depth = 0;
+	int depth = 0;
+	binary_tree_t *parent;
 
-	if (!tree)
+	if (!node)
 		return (0);
+	parent = node->parent;
 
-	while (tree->parent)
+	while (parent)
 	{
-		depth++;
-		tree = tree->parent;
+		depth += 1;
+		parent = parent->parent;
 	}
-
 	return (depth);
 }
